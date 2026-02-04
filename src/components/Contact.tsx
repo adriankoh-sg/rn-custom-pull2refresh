@@ -9,10 +9,9 @@ const Contact = ({ contact }: { contact: ContactType }) => {
         width: "100%",
         flexDirection: "row",
         alignItems: "flex-start",
-        margin: 10,
+        padding: 10,
         borderBottomWidth: 1,
-        borderBottomColor: "#ddd",
-        paddingBottom: 10,
+        borderBottomColor: "#ccc",
       }}
       key={`item-${contact.id}`}
     >
