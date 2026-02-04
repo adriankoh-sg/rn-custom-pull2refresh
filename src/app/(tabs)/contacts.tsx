@@ -1,8 +1,6 @@
 import Contact from "@/src/components/Contact";
 import { sampleContactList } from "@/src/dummy/contacts";
-import { FlatList, StyleSheet } from "react-native";
-
-import { View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
 export default function Contacts() {
   return (
