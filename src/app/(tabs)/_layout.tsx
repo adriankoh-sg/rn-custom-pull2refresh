@@ -3,6 +3,7 @@ import { Tabs } from "expo-router";
 import React from "react";
 
 import Colors from "@/src/constants/Colors";
+import { LinearGradient } from "expo-linear-gradient";
 import { useColorScheme } from "react-native";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -20,9 +21,18 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
         headerShown: true,
+        headerTitleStyle: { color: "#fff" },
+        headerBackground: () => {
+          return (
+            <LinearGradient
+              colors={["#4c669f", "#3b5998", "#192f6a"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{ flex: 1 }}
+            />
+          );
+        },
       }}
     >
       <Tabs.Screen
