@@ -11,14 +11,14 @@ const Contact = ({ contact }: { contact: ContactType }) => {
         alignItems: "flex-start",
         margin: 10,
         borderBottomWidth: 1,
-        borderBottomColor: "#eee",
+        borderBottomColor: "#ddd",
         paddingBottom: 10,
       }}
       key={`item-${contact.id}`}
     >
       <Image
         source={{ uri: contact.avatar }}
-        style={{ width: 50, height: 50 }}
+        style={{ width: 50, height: 50, borderRadius: 25, borderColor: "#ccc", borderWidth: 0.3 }}
         contentFit="contain"
       />
       <View style={{ marginLeft: 10 }}>
