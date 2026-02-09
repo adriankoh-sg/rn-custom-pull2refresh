@@ -5,11 +5,13 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
+import AppLoadingScreen from "@/src/components/AppLoading";
 import { useColorScheme } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -21,7 +23,14 @@ export const unstable_settings = {
   initialRouteName: "(tabs)",
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
+// Set the animation options. This is optional.
+SplashScreen.setOptions({
+  duration: 0,
+  fade: true,
+});
+
+let start = new Date().getTime();
+
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -30,20 +39,34 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
 
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (loaded && !ready) {
+      setTimeout(() => {
+        setReady(true);
+      }, 10);
+    }
+  }, [loaded, ready]);
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    if (loaded && ready) {
+      router.navigate('/(tabs)');
     }
-  }, [loaded]);
+  }, [loaded, ready]);
 
-  if (!loaded) {
-    return null;
+  if (!loaded || !ready) {
+    SplashScreen.hide();
+    const t = new Date().getTime() - start;
+    console.log("Showing loading screen", loaded, ready, `Elapsed time: ${t}ms`);
+
+    return <AppLoadingScreen />;
   }
+
 
   return <RootLayoutNav />;
 }
@@ -52,10 +75,12 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
