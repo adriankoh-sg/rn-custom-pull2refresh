@@ -1,11 +1,12 @@
 import Contact from "@/src/components/Contact";
+import SkeletonContactList from "@/src/components/SkeletonContactList";
 import { MAX_PULLDOWN_DISTANCE, PULLDOWN_REFRESH_THRESHOLD } from "@/src/constants/Config";
 import { usePullDown } from "@/src/context/PullDownContext";
 import { sampleContactList } from "@/src/dummy/contacts";
 import { ContactType } from "@/src/types";
 import { useScrollToTop } from '@react-navigation/native';
 import { FlashList, FlashListRef } from "@shopify/flash-list";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { PanResponder, StyleSheet, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 
@@ -16,6 +17,7 @@ export default function Contacts() {
   const flatListRef = useRef<FlashListRef<ContactType>>(null);
   const scrollY = useSharedValue(0);
   const { pullDownDistance, isRefresh } = usePullDown();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Hook to enable scroll to top when the tab is pressed again
   useScrollToTop(
@@ -28,8 +30,10 @@ export default function Contacts() {
   // on refresh
   const onRefresh = (done: () => void) => {
     // Simulate a network request or any async operation
+    setIsLoading(true);
     setTimeout(() => {
       done(); // Call done when the refresh is complete
+      setIsLoading(false);
     }, 5000); // Adjust the timeout as needed
   };
 
@@ -42,11 +46,11 @@ export default function Contacts() {
   });
 
   const onPanRelease = () => {
-    pullDownDistance.value = withSpring(isRefresh.value ? PULLDOWN_REFRESH_THRESHOLD : 0, { duration: 500 });
+    pullDownDistance.value = withSpring(isRefresh.value ? PULLDOWN_REFRESH_THRESHOLD : 0, { duration: 300 });
 
     if (isRefresh.value) {
       onRefresh(() => {
-        pullDownDistance.value = withTiming(0, { duration: 500 });
+        pullDownDistance.value = withTiming(0, { duration: 180 });
       });
     }
   };
@@ -57,6 +61,7 @@ export default function Contacts() {
         scrollY.value <= 0 && gestureState.dy > 0,
       onPanResponderMove: (event, gestureState) => {
         pullDownDistance.value = Math.max(Math.min(gestureState.dy, MAX_PULLDOWN_DISTANCE), 0);
+        if (pullDownDistance.value > PULLDOWN_REFRESH_THRESHOLD) setIsLoading(true);
       },
       onPanResponderRelease: onPanRelease,
       onPanResponderTerminate: onPanRelease,
@@ -65,13 +70,19 @@ export default function Contacts() {
 
   return (
     <View style={styles.container} {...panResponderRef.current.panHandlers}>
-      <AnimatedFlashList
-        ref={flatListRef}
-        data={sampleContactList as ContactType[]}
-        renderItem={({ item }) => <Contact contact={item} />}
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
-      />
+      {
+        isLoading ? (
+          <SkeletonContactList />
+        ) : (
+          <AnimatedFlashList
+            ref={flatListRef}
+            data={sampleContactList as ContactType[]}
+            renderItem={({ item }) => <Contact contact={item} />}
+            onScroll={scrollHandler}
+            scrollEventThrottle={16}
+          />
+        )
+      }
     </View>
   );
 }

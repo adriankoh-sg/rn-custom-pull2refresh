@@ -1,0 +1,84 @@
+import { StyleSheet, View } from "react-native";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
+
+const SkeletonContactList = () => {
+  const contacts = new Array(10).fill(0).map((_, i) => ({
+    id: i,
+    name: "Loading...",
+    phone: "Loading...",
+    avatar: "https://via.placeholder.com/50?text=...",
+  }));
+
+  const opacityStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withRepeat(
+        withSequence(
+          withTiming(1, { duration: 800, easing: Easing.inOut(Easing.ease) }),
+          withTiming(0.5, {
+            duration: 500,
+            easing: Easing.inOut(Easing.ease),
+          }),
+        ),
+        -1,
+        true,
+      ),
+    };
+  });
+
+  return (
+    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      {contacts.map((contact) => (
+        <Animated.View
+          style={[styles.container, opacityStyle]}
+          key={`item-${contact.id}`}
+        >
+          <View style={styles.avatar} />
+
+          <View style={{ marginLeft: 10 }}>
+            <View
+              style={{
+                width: 180,
+                height: 20,
+                backgroundColor: "#eee",
+                marginBottom: 6,
+              }}
+            />
+            <View
+              style={{
+                width: 120,
+                height: 16,
+                backgroundColor: "#eee",
+                marginBottom: 6,
+              }}
+            />
+          </View>
+        </Animated.View>
+      ))}
+    </View>
+  );
+};
+
+export default SkeletonContactList;
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#eee",
+  },
+});
