@@ -80,6 +80,7 @@ export default function Contacts() {
             renderItem={({ item }) => <Contact contact={item} />}
             onScroll={scrollHandler}
             scrollEventThrottle={16}
+            renderToHardwareTextureAndroid={true}
           />
         )
       }
