@@ -1,6 +1,8 @@
 
 import React from "react";
-import { Animated, PanResponder, StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 const styles = StyleSheet.create({
   container: {
@@ -17,34 +19,40 @@ const styles = StyleSheet.create({
 });
 
 const VanillaAnimation = () => {
-  const position = new Animated.ValueXY();
-  const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponderCapture: () => true,
-    onPanResponderGrant: (e) => {
-      console.log("Grant:", { native: e.nativeEvent });
-      position.setValue({
-        x: e.nativeEvent.locationX,
-        y: e.nativeEvent.locationY,
-      });
+  const position = useSharedValue({ x: 0, y: 0 });
 
-      // position.setValue({ x: 0, y: 0 });
-    },
-    onPanResponderMove: Animated.event([
-      null,
-      { dx: position.x, dy: position.y },
-    ]),
-    onPanResponderRelease: (e) => {
-      position.flattenOffset();
-    },
-  });
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: position.value.x },
+        { translateY: position.value.y }
+      ]
+    };
+  }, [position]);
+
+  const gesture = Gesture.Pan()
+    .onUpdate((e) => {
+      position.value = {
+        x: e.translationX,
+        y: e.translationY,
+      };
+    })
+    .onEnd(() => {
+      position.value = withSpring({ x: 0, y: 0 }, { duration: 500 });
+    });
+
 
   return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[styles.ball, position.getLayout()]}
-        {...panResponder.panHandlers}
-      />
-    </View>
+    <GestureDetector gesture={gesture}>
+      <View>
+        <Text>Drag the ball around!</Text>
+        <View style={styles.container}>
+          <Animated.View
+            style={[styles.ball, animatedStyle]}
+          />
+        </View>
+      </View>
+    </GestureDetector>
   );
 };
 
