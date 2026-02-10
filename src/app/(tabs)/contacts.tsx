@@ -6,6 +6,7 @@ import { sampleContactList } from "@/src/dummy/contacts";
 import { ContactType } from "@/src/types";
 import { useScrollToTop } from '@react-navigation/native';
 import { FlashList, FlashListRef } from "@shopify/flash-list";
+import { Tabs } from "expo-router";
 import { useRef, useState } from "react";
 import { PanResponder, StyleSheet, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
@@ -70,6 +71,11 @@ export default function Contacts() {
 
   return (
     <View style={styles.container} {...panResponderRef.current.panHandlers}>
+      <Tabs.Screen
+        options={{
+          title: `Contacts (${sampleContactList.length})`,
+        }}
+      />
       {
         isLoading ? (
           <SkeletonContactList />
