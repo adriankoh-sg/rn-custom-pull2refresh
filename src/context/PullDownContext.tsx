@@ -1,24 +1,26 @@
+import { MAX_PULLDOWN_DISTANCE, PULLDOWN_REFRESH_THRESHOLD } from '@/src/constants/Config';
 import { createContext, ReactNode, useContext } from 'react';
 import { SharedValue, useDerivedValue, useSharedValue } from 'react-native-reanimated';
 
 interface PullDownContextType {
   pullDownDistance: SharedValue<number>;
   clampedPullDownDistance: SharedValue<number>;
-  MAX_PULLDOWN_DISTANCE: number;
+  isRefresh: SharedValue<boolean>;
 }
 
 const PullDownContext = createContext<PullDownContextType | undefined>(undefined);
 
 export function PullDownProvider({ children }: { children: ReactNode }) {
   const pullDownDistance = useSharedValue(0);
-  const MAX_PULLDOWN_DISTANCE = 150;
 
   const clampedPullDownDistance = useDerivedValue(() => {
     return Math.min(pullDownDistance.value, MAX_PULLDOWN_DISTANCE);
   });
 
+  const isRefresh = useDerivedValue(() => pullDownDistance.value >= PULLDOWN_REFRESH_THRESHOLD);
+
   return (
-    <PullDownContext.Provider value={{ pullDownDistance, clampedPullDownDistance, MAX_PULLDOWN_DISTANCE }}>
+    <PullDownContext.Provider value={{ pullDownDistance, clampedPullDownDistance, isRefresh }}>
       {children}
     </PullDownContext.Provider>
   );

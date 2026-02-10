@@ -3,14 +3,21 @@ import { Tabs } from "expo-router";
 import React from "react";
 
 import Colors from "@/src/constants/Colors";
+import { TAB_HEADER_HEIGHT } from "@/src/constants/Config";
 import { PullDownProvider, usePullDown } from "@/src/context/PullDownContext";
 import { LinearGradient } from "expo-linear-gradient";
-import { StyleSheet, useColorScheme, View } from "react-native";
+import { StyleSheet, Text, useColorScheme, View } from "react-native";
 import Animated, {
+  Easing,
   interpolate,
+  useAnimatedReaction,
   useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -22,29 +29,40 @@ function TabBarIcon(props: {
 function TabLayoutContent() {
   const colorScheme = useColorScheme();
   const { top } = useSafeAreaInsets();
-  const { clampedPullDownDistance } = usePullDown();
+  const { clampedPullDownDistance, isRefresh } = usePullDown();
+  const loopRotation = useSharedValue(0);
 
   const headerStyle = useAnimatedStyle(() => {
     return {
-      height: top + 45 + clampedPullDownDistance.value,
+      height: TAB_HEADER_HEIGHT + top + clampedPullDownDistance.value,
     };
   });
 
-  // const pregressBarStyle = useAnimatedStyle(() => {
-  //   return {
-  //     width: `${(clampedPullDownDistance.value / 150) * 100}%`,
-  //   };
-  // }, [clampedPullDownDistance]);
+  useAnimatedReaction(
+    () => isRefresh.value,
+    (isRefreshing) => {
+      if (isRefreshing) {
+        loopRotation.value = withRepeat(
+          withTiming(360, { duration: 1000, easing: Easing.linear }),
+          -1,
+          false
+        );
+      } else {
+        loopRotation.value = 0;
+      }
+    }
+  );
 
   const circularProgressStyle = useAnimatedStyle(() => {
     const progress = clampedPullDownDistance.value / 150;
-    const rotation = interpolate(progress, [0, 1], [0, 360], "clamp");
+    const staticRotation = interpolate(progress, [0, 1], [0, 360], "clamp");
+    const rotation = isRefresh.value ? loopRotation.value : staticRotation;
 
     return {
       transform: [{ rotate: `${rotation}deg` }],
-      opacity: interpolate(progress, [0, 0.3], [0, 1], "clamp"),
+      opacity: interpolate(progress, [0, 0.15, 0.3], [0, 0, 1], "clamp"),
     };
-  }, [clampedPullDownDistance]);
+  }, [clampedPullDownDistance, isRefresh]);
 
   return (
     <Tabs
@@ -52,16 +70,19 @@ function TabLayoutContent() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: true,
         headerTitleStyle: { color: "#fff" },
-        headerBackground: () => {
+        header: ({ options }) => {
           return (
-            <Animated.View style={[headerStyle]}>
+            <Animated.View style={headerStyle}>
               <LinearGradient
                 colors={["#4c669f", "#3b5998", "#192f6a"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={{ flex: 1 }}
               />
-              <View style={[styles.progressContainer, { top: top + 50 }]}>
+              <View style={[styles.titleSection, { top }]}>
+                <Text style={styles.title}>{options.title}</Text>
+              </View>
+              <View style={[styles.progressContainer, { top: top + TAB_HEADER_HEIGHT }]}>
                 <Animated.View style={[styles.circularProgess, circularProgressStyle]} />
               </View>
             </Animated.View>
@@ -114,4 +135,17 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
     borderTopColor: "#4d4d4d",
   },
+  titleSection: {
+    position: "absolute",
+    flex: 1,
+    width: "100%",
+    height: TAB_HEADER_HEIGHT,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  }
 });

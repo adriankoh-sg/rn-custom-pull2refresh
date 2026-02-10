@@ -19,6 +19,7 @@ const Contact = ({ contact }: { contact: ContactType }) => {
         source={{ uri: contact.avatar }}
         style={{ width: 50, height: 50, borderRadius: 25, borderColor: "#ccc", borderWidth: 0.3 }}
         contentFit="contain"
+        cachePolicy={'memory-disk'}
       />
       <View style={{ marginLeft: 10 }}>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>{contact.name}</Text>
