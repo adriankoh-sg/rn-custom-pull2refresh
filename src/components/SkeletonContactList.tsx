@@ -1,11 +1,7 @@
 import { StyleSheet, View } from "react-native";
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from "react-native-reanimated";
+import Animated from "react-native-reanimated";
+import Colors from "../constants/Colors";
+import { useFadingStyle } from "../hooks/useCommonAnimation";
 
 const SkeletonContactList = () => {
   const contacts = new Array(10).fill(0).map((_, i) => ({
@@ -15,21 +11,7 @@ const SkeletonContactList = () => {
     avatar: "https://via.placeholder.com/50?text=...",
   }));
 
-  const opacityStyle = useAnimatedStyle(() => {
-    return {
-      opacity: withRepeat(
-        withSequence(
-          withTiming(1, { duration: 800, easing: Easing.inOut(Easing.ease) }),
-          withTiming(0.5, {
-            duration: 500,
-            easing: Easing.inOut(Easing.ease),
-          }),
-        ),
-        -1,
-        true,
-      ),
-    };
-  });
+  const opacityStyle = useFadingStyle({ fadeInDuration: 800, fadeOutDuration: 800 });
 
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -45,7 +27,7 @@ const SkeletonContactList = () => {
               style={{
                 width: 180,
                 height: 20,
-                backgroundColor: "#eee",
+                backgroundColor: Colors.skeletonBackground,
                 marginBottom: 6,
               }}
             />
@@ -53,7 +35,7 @@ const SkeletonContactList = () => {
               style={{
                 width: 120,
                 height: 16,
-                backgroundColor: "#eee",
+                backgroundColor: Colors.skeletonBackground,
                 marginBottom: 6,
               }}
             />
