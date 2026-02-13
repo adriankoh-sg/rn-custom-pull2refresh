@@ -18,7 +18,7 @@ export const useFadingStyle = ({
   fadeOutDuration = 800,
   finalOpacity = 0.5,
 }: {
-  fadeInDuration?: number
+  fadeInDuration?: number;
   fadeOutDuration?: number;
   finalOpacity?: number;
 }) => {
