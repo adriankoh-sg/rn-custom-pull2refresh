@@ -1,12 +1,12 @@
 import { Image, ImageProps, ImageStyle } from "expo-image";
 import React from "react";
-import { StyleProp, StyleSheet, View } from "react-native";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import Animated from "react-native-reanimated";
 import Colors from "../constants/Colors";
 import { useFadingStyle } from "../hooks/useCommonAnimation";
 interface ImageLoaderProps extends ImageProps {
   src: string;
-  style: StyleProp<ImageStyle>;
+  style: StyleProp<ImageStyle> & StyleProp<ViewStyle>;
   width: number;
   height: number;
 }
