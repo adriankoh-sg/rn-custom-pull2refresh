@@ -1,6 +1,6 @@
 import { ContactType } from "@/src/types";
-import { Image } from "expo-image";
 import { Text, View } from "react-native";
+import ImageLoader from "./ImageLoader";
 
 const Contact = ({ contact }: { contact: ContactType }) => {
   return (
@@ -15,11 +15,13 @@ const Contact = ({ contact }: { contact: ContactType }) => {
       }}
       key={`item-${contact.id}`}
     >
-      <Image
-        source={{ uri: contact.avatar }}
-        style={{ width: 50, height: 50, borderRadius: 25, borderColor: "#ccc", borderWidth: 0.3 }}
+      <ImageLoader
+        src={contact.avatar}
+        style={{ borderRadius: 25, borderColor: "#ccc", borderWidth: 0.3 }}
+        width={50}
+        height={50}
+        cachePolicy="memory-disk"
         contentFit="contain"
-        cachePolicy={'memory-disk'}
       />
       <View style={{ marginLeft: 10 }}>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>{contact.name}</Text>
