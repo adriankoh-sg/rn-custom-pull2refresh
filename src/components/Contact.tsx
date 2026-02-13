@@ -20,6 +20,7 @@ const Contact = ({ contact }: { contact: ContactType }) => {
         style={{ borderRadius: 25, borderColor: "#ccc", borderWidth: 0.3 }}
         width={50}
         height={50}
+        cachePolicy="memory-disk"
         contentFit="contain"
       />
       <View style={{ marginLeft: 10 }}>
