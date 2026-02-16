@@ -41,7 +41,7 @@ export default function Contacts() {
     setTimeout(() => {
       done(); // Call done when the refresh is complete
       setIsLoading(false);
-    }, 5000); // Adjust the timeout as needed
+    }, 1000); // Adjust the timeout as needed
   };
 
   const scrollHandler = useAnimatedScrollHandler({
