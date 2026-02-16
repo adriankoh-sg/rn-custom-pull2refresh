@@ -5,10 +5,14 @@ This project is built with Expo React Native and showcases the use of FlashList 
 ## Screenshots
 
 Contact List Screen:  
-![Contact List Screen](./docs/contacts.png)
+<img src="./docs/contacts.png" alt="Contact List Screen" width="250" />
 
 Video Demo:  
-![Video Demo](./docs/demo.mov)
+<video width="250" controls>
+
+  <source src="./docs/demo.mov" type="video/quicktime">
+  Your browser does not support the video tag.
+</video>
 
 ## Project Setup
 
