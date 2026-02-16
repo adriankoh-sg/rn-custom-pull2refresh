@@ -1,26 +1,22 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import { router, Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
+import { router, Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect, useState } from 'react';
 
-import AppLoadingScreen from "@/src/components/AppLoading";
-import { useColorScheme } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import AppLoadingScreen from '@/src/components/AppLoading';
+import { useColorScheme } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary
-} from "expo-router";
+  ErrorBoundary,
+} from 'expo-router';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(tabs)",
+  initialRouteName: '(tabs)',
 };
 
 // Set the animation options. This is optional.
@@ -35,7 +31,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   });
 
@@ -62,11 +58,10 @@ export default function RootLayout() {
   if (!loaded || !ready) {
     SplashScreen.hide();
     const t = new Date().getTime() - start;
-    console.log("Showing loading screen", loaded, ready, `Elapsed time: ${t}ms`);
+    console.log('Showing loading screen', loaded, ready, `Elapsed time: ${t}ms`);
 
     return <AppLoadingScreen />;
   }
-
 
   return <RootLayoutNav />;
 }
@@ -76,7 +71,7 @@ function RootLayoutNav() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>

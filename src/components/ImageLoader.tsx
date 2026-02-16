@@ -1,9 +1,8 @@
-import { Image, ImageProps, ImageStyle } from "expo-image";
-import React from "react";
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
-import Animated from "react-native-reanimated";
-import Colors from "../constants/Colors";
-import { useFadingStyle } from "../hooks/useCommonAnimation";
+import { useFadingStyle } from '@/src/hooks/useCommonAnimation';
+import { Image, ImageProps, ImageStyle } from 'expo-image';
+import React from 'react';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import Animated from 'react-native-reanimated';
 interface ImageLoaderProps extends ImageProps {
   src: string;
   style: StyleProp<ImageStyle> & StyleProp<ViewStyle>;
@@ -20,13 +19,7 @@ interface ImageLoaderProps extends ImageProps {
  * @param props - Additional props for the Image component.
  * @returns
  */
-const ImageLoader = ({
-  src,
-  style,
-  width,
-  height,
-  ...props
-}: ImageLoaderProps) => {
+const ImageLoader = ({ src, style, width, height, ...props }: ImageLoaderProps) => {
   const [isLoading, setIsLoading] = React.useState(true);
 
   const fadingStyle = useFadingStyle({});
@@ -61,9 +54,9 @@ export default ImageLoader;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.skeletonBackground,
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
+    backgroundColor: '#E1E1E1',
   },
 });

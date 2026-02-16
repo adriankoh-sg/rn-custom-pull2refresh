@@ -1,18 +1,25 @@
-import Contact from "@/src/components/Contact";
-import SkeletonContactList from "@/src/components/SkeletonContactList";
-import { MAX_PULLDOWN_DISTANCE, PULLDOWN_REFRESH_THRESHOLD } from "@/src/constants/Config";
-import { usePullDown } from "@/src/context/PullDownContext";
-import { sampleContactList } from "@/src/dummy/contacts";
-import { ContactType } from "@/src/types";
+import Contact from '@/src/components/Contact';
+import SkeletonContactList from '@/src/components/SkeletonContactList';
+import { MAX_PULLDOWN_DISTANCE, PULLDOWN_REFRESH_THRESHOLD } from '@/src/constants/config';
+import { usePullDown } from '@/src/context/PullDownContext';
+import { sampleContactList } from '@/src/dummy/contacts';
+import { ContactType } from '@/src/types/contacts';
 import { useScrollToTop } from '@react-navigation/native';
-import { FlashList, FlashListRef } from "@shopify/flash-list";
-import { Tabs } from "expo-router";
-import { useRef, useState } from "react";
-import { PanResponder, StyleSheet, View } from "react-native";
-import Animated, { useAnimatedScrollHandler, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import { FlashList, FlashListRef } from '@shopify/flash-list';
+import { Tabs } from 'expo-router';
+import { useRef, useState } from 'react';
+import { PanResponder, StyleSheet, View } from 'react-native';
+import Animated, {
+  useAnimatedScrollHandler,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
 // use custom Animated FlashList
-const AnimatedFlashList = Animated.createAnimatedComponent(FlashList) as unknown as typeof FlashList;
+const AnimatedFlashList = Animated.createAnimatedComponent(
+  FlashList
+) as unknown as typeof FlashList;
 
 export default function Contacts() {
   const flatListRef = useRef<FlashListRef<ContactType>>(null);
@@ -23,8 +30,7 @@ export default function Contacts() {
   // Hook to enable scroll to top when the tab is pressed again
   useScrollToTop(
     useRef({
-      scrollToTop: () =>
-        flatListRef.current?.scrollToOffset({ offset: 0, animated: true }),
+      scrollToTop: () => flatListRef.current?.scrollToOffset({ offset: 0, animated: true }),
     })
   );
 
@@ -47,7 +53,9 @@ export default function Contacts() {
   });
 
   const onPanRelease = () => {
-    pullDownDistance.value = withSpring(isRefresh.value ? PULLDOWN_REFRESH_THRESHOLD : 0, { duration: 300 });
+    pullDownDistance.value = withSpring(isRefresh.value ? PULLDOWN_REFRESH_THRESHOLD : 0, {
+      duration: 300,
+    });
 
     if (isRefresh.value) {
       onRefresh(() => {
@@ -76,20 +84,18 @@ export default function Contacts() {
           title: `Contacts (${sampleContactList.length})`,
         }}
       />
-      {
-        isLoading ? (
-          <SkeletonContactList />
-        ) : (
-          <AnimatedFlashList
-            ref={flatListRef}
-            data={sampleContactList as ContactType[]}
-            renderItem={({ item }) => <Contact contact={item} />}
-            onScroll={scrollHandler}
-            scrollEventThrottle={16}
-            renderToHardwareTextureAndroid={true}
-          />
-        )
-      }
+      {isLoading ? (
+        <SkeletonContactList />
+      ) : (
+        <AnimatedFlashList
+          ref={flatListRef}
+          data={sampleContactList as ContactType[]}
+          renderItem={({ item }) => <Contact contact={item} />}
+          onScroll={scrollHandler}
+          scrollEventThrottle={16}
+          renderToHardwareTextureAndroid={true}
+        />
+      )}
     </View>
   );
 }
