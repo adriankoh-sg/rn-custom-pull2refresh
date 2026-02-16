@@ -1,12 +1,12 @@
 import { Image } from 'expo-image';
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 
 export default function AppLoadingScreen() {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/images/apngb-animated.png")}
+        source={require('../assets/images/apngb-animated.png')}
         style={styles.image}
         contentFit="contain"
         accessibilityLabel="Loading"
@@ -18,9 +18,9 @@ export default function AppLoadingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: 100,

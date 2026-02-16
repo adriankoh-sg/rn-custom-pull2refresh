@@ -1,4 +1,4 @@
-import { MAX_PULLDOWN_DISTANCE, PULLDOWN_REFRESH_THRESHOLD } from '@/src/constants/Config';
+import { MAX_PULLDOWN_DISTANCE, PULLDOWN_REFRESH_THRESHOLD } from '@/src/constants/config';
 import { createContext, ReactNode, useContext } from 'react';
 import { SharedValue, useDerivedValue, useSharedValue } from 'react-native-reanimated';
 
