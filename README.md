@@ -10,7 +10,7 @@ Contact List Screen:
 Video Demo:  
 <video width="250" controls>
 
-  <source src="./docs/demo.mov" type="video/quicktime">
+  <source src="./docs/demo.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
 
