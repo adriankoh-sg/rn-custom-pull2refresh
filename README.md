@@ -8,7 +8,7 @@ Contact List Screen:
 <img src="./docs/contacts.png" alt="Contact List Screen" width="250" />
 
 Video Demo:  
-<img src="./docs/demo.gif" alt="Video Demo" width="250" />
+<img src="./docs/demo2.gif" alt="Video Demo" width="250" />
 
 ## Project Setup
 
